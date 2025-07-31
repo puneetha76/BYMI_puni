@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MastiLingo Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to top, #0f172a, #1e293b);
+      color: #fff;
+      text-align: center;
+      padding: 30px 20px;
+    }
+    header h1 {
+      font-size: 30px;
+      color: #60a5fa;
+      animation: flicker 2.5s infinite alternate;
+    }
+    @keyframes flicker {
+      0% { opacity: 0.9; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.03); color: #3b82f6; }
+      100% { opacity: 0.95; transform: scale(1); }
+    }
+
+    .quiz-container {
+      background: #334155;
+      padding: 30px;
+      border-radius: 18px;
+      max-width: 650px;
+      margin: 40px auto;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    }
+
+    .question-box {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .options button {
+      display: block;
+      width: 90%;
+      margin: 10px auto;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background-color: #64748b;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .options button:hover {
+      background-color: #3b82f6;
+    }
+
+    .audio-btn {
+      background: #1d4ed8;
+      padding: 10px 20px;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    #genie {
+      width: 80px;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      animation: float 2.5s ease-in-out infinite;
+      cursor: pointer;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧞 Welcome to Your Language Quiz!</h1>
+  </header>
+
+  <div class="quiz-container">
+    <div id="languageDisplay" style="margin-bottom:20px; font-size:18px;"></div>
+    
+    <div class="question-box" id="questionText">Loading...</div>
+
+    <button class="audio-btn" onclick="playAudio()">🔊 Hear Pronunciation</button>
+
+    <div class="options" id="optionsArea"></div>
+
+    <button onclick="nextQuestion()" style="margin-top: 20px; padding: 10px 20px; background: #16a34a; color: white; border: none; border-radius: 10px;">Next ➡️</button>
+  </div>
+
+  <img id="genie" src="images/genie.png" onclick="genieTalk()" alt="Genie" />
+  
+  <audio id="wordAudio"></audio>
+  <audio id="correctSound" src="sounds/success.mp3"></audio>
+  <audio id="wrongSound" src="sounds/fail.mp3"></audio>
+
+  <script>
+    const quizData = {
+      Hindi: [
+        { word: "नमस्ते", translit: "Namaste", english: "Hello", audio: "audio/hindi/hindi_1.mp3", options: ["Hello", "Thank you", "Sorry", "Yes"] },
+        { word: "धन्यवाद", translit: "Dhanyavaad", english: "Thank you", audio: "audio/hindi/hindi_2.mp3", options: ["Thank you", "Hello", "No", "Food"] },
+        { word: "कृपया", translit: "Kripya", english: "Please", audio: "audio/hindi/hindi_3.mp3", options: ["Please", "Sorry", "Yes", "Water"] },
+        { word: "मुझे माफ करें", translit: "Mujhe maaf karein", english: "Sorry", audio: "audio/hindi/hindi_4.mp3", options: ["Sorry", "Hello", "No", "Food"] },
+        { word: "हाँ", translit: "Haan", english: "Yes", audio: "audio/hindi/hindi_5.mp3", options: ["Yes", "No", "Thank you", "Please"] },
+        { word: "नहीं", translit: "Nahin", english: "No", audio: "audio/hindi/hindi_6.mp3", options: ["No", "Yes", "Hello", "Food"] },
+        { word: "आपका स्वागत है", translit: "Aapka swagat hai", english: "You're welcome", audio: "audio/hindi/hindi_7.mp3", options: ["You're welcome", "Thank you", "Sorry", "Hello"] },
+        { word: "कैसे हो?", translit: "Kaise ho?", english: "How are you?", audio: "audio/hindi/hindi_8.mp3", options: ["How are you?", "What is your name?", "Goodbye", "Yes"] },
+      ],
+      Tamil: [
+        { word: "வணக்கம்", translit: "Vanakkam", english: "Hello", audio: "audio/tamil/tamil_1.mp3", options: ["Hello", "Food", "Yes", "Car"] },
+        { word: "நன்றி", translit: "Nandri", english: "Thank you", audio: "audio/tamil/tamil_2.mp3", options: ["Thank you", "Hello", "No", "Water"] },
+        { word: "தயவு", translit: "Thayavu", english: "Please", audio: "audio/tamil/tamil_3.mp3", options: ["Please", "Sorry", "Yes", "Food"] },
+        { word: "மன்னிக்கவும்", translit: "Mannikkavum", english: "Sorry", audio: "audio/tamil/tamil_4.mp3", options: ["Sorry", "Hello", "No", "Thank you"] },
+        { word: "ஆம்", translit: "Aam", english: "Yes", audio: "audio/tamil/tamil_5.mp3", options: ["Yes", "No", "Hello", "Food"] },
+        { word: "இல்லை", translit: "Illai", english: "No", audio: "audio/tamil/tamil_6.mp3", options: ["No", "Yes", "Thank you", "Please"] },
+        { word: "உங்கள் வரவேற்பு", translit: "Ungal varaverpu", english: "You're welcome", audio: "audio/tamil/tamil_7.mp3", options: ["You're welcome", "Thank you", "Sorry", "Hello"] },
+        { word: "நீங்கள் எப்படி இருக்கிறீர்கள்?", translit: "Neenga epadi irukkirirgal?", english: "How are you?", audio: "audio/tamil/tamil_8.mp3", options: ["How are you?", "What is your name?", "Goodbye", "Yes"] },
+      ],
+      Kannada: [
+        { word: "ನಮಸ್ಕಾರ", translit: "Namaskāra", english: "Hello", audio: "audio/kannada/kannada_1.mp3", options: ["Hello", "Goodbye", "Book", "School"] },
+        { word: "ಧನ್ಯವಾದ", translit: "Dhanyavāda", english: "Thank you", audio: "audio/kannada/kannada_2.mp3", options: ["Thank you", "Hello", "No", "Food"] },
+        { word: "ದಯವಿಟ್ಟು", translit: "Dayavittu", english: "Please", audio: "audio/kannada/kannada_3.mp3", options: ["Please", "Sorry", "Yes", "Water"] },
+        { word: "ಕ್ಷಮಿಸಿ", translit: "Kshamisi", english: "Sorry", audio: "audio/kannada/kannada_4.mp3", options: ["Sorry", "Hello", "No", "Thank you"] },
+        { word: "ಹೌದು", translit: "Howdu", english: "Yes", audio: "audio/kannada/kannada_5.mp3", options: ["Yes", "No", "Hello", "Food"] },
+        { word: "ಇಲ್ಲ", translit: "Illa", english: "No", audio: "audio/kannada/kannada_6.mp3", options: ["No", "Yes", "Thank you", "Please"] },
+        { word: "ನೀವು ಸ್ವಾಗತ", translit: "Neenu swagata", english: "You're welcome", audio: "audio/kannada/kannada_7.mp3", options: ["You're welcome", "Thank you", "Sorry", "Hello"] },
+        { word: "ನೀವು ಹೇಗಿದ್ದೀರಾ?", translit: "Neenu hegiddira?", english: "How are you?", audio: "audio/kannada/kannada_8.mp3", options: ["How are you?", "What is your name?", "Goodbye", "Yes"] },
+      ],
+      Telugu: [
+        { word: "నమస్తే", translit: "Namastē", english: "Hello", audio: "audio/telugu/telugu_1.mp3", options: ["Hello", "Chair", "Pen", "Friend"] },
+        { word: "ధన్యవాదాలు", translit: "Dhanyavādālu", english: "Thank you", audio: "audio/telugu/telugu_2.mp3", options: ["Thank you", "Hello", "No", "Food"] },
+        { word: "దయచేసి", translit: "Dayachēsi", english: "Please", audio: "audio/telugu/telugu_3.mp3", options: ["Please", "Sorry", "Yes", "Water"] },
+        { word: "క్షమించండి", translit: "Kshaminchandi", english: "Sorry", audio: "audio/telugu/telugu_4.mp3", options: ["Sorry", "Hello", "No", "Thank you"] },
+        { word: "అవును", translit: "Avunu", english: "Yes", audio: "audio/telugu/telugu_5.mp3", options: ["Yes", "No", "Hello", "Food"] },
+        { word: "కాదు", translit: "Kādu", english: "No", audio: "audio/telugu/telugu_6.mp3", options: ["No", "Yes", "Thank you", "Please"] },
+        { word: "మీరు స్వాగతం", translit: "Meeru swagatham", english: "You're welcome", audio: "audio/telugu/telugu_7.mp3", options: ["You're welcome", "Thank you", "Sorry", "Hello"] },
+        { word: "మీరు ఎలా ఉన్నారు?", translit: "Meeru ela unnaru?", english: "How are you?", audio: "audio/telugu/telugu_8.mp3", options: ["How are you?", "What is your name?", "Goodbye", "Yes"] },
+      ],
+      Malayalam: [
+        { word: "നമസ്കാരം", translit: "Namaskāram", english: "Hello", audio: "audio/malayalam/malayalam_1.mp3", options: ["Hello", "Rain", "Sun", "Thank you"] },
+        { word: "നന്ദി", translit: "Nandi", english: "Thank you", audio: "audio/malayalam/malayalam_2.mp3", options: ["Thank you", "Hello", "No", "Food"] },
+        { word: "ദയവായി", translit: "Dayavaayi", english: "Please", audio: "audio/malayalam/malayalam_3.mp3", options: ["Please", "Sorry", "Yes", "Water"] },
+        { word: "ക്ഷമിക്കണം", translit: "Kshamikkanam", english: "Sorry", audio: "audio/malayalam/malayalam_4.mp3", options: ["Sorry", "Hello", "No", "Thank you"] },
+        { word: "അതെ", translit: "Athe", english: "Yes", audio: "audio/malayalam/malayalam_5.mp3", options: ["Yes", "No", "Hello", "Food"] },
+        { word: "ഇല്ല", translit: "Illa", english: "No", audio: "audio/malayalam/malayalam_6.mp3", options: ["No", "Yes", "Thank you", "Please"] },
+        { word: "നിങ്ങളുടെ സ്വാഗതം", translit: "Ningalude swāgatham", english: "You're welcome", audio: "audio/malayalam/malayalam_7.mp3", options: ["You're welcome", "Thank you", "Sorry", "Hello"] },
+        { word: "സുഖമാണോ?", translit: "Sukhamaano?", english: "How are you?", audio: "audio/malayalam/malayalam_8.mp3", options: ["How are you?", "What is your name?", "Goodbye", "Yes"] },
+      ]
+    };
+
+    let currentLang = localStorage.getItem("selectedLanguage") || "Hindi";
+    let currentQuestion = 0;
+
+    document.getElementById("languageDisplay").innerText = `🌐 Language: ${currentLang}`;
+
+    function loadQuestion() {
+      const q = quizData[currentLang][currentQuestion];
+      if (!q) {
+        alert("🎉 You've completed all questions!");
+        return;
+      }
+
+      document.getElementById("questionText").innerHTML = `${q.word} (${q.translit})`;
+      document.getElementById("wordAudio").src = q.audio || "";
+
+      const optionsHTML = (q.options || []).map(opt => `
+        <button onclick="checkAnswer('${opt}', '${q.english}')">${opt}</button>
+      `).join("");
+      document.getElementById("optionsArea").innerHTML = optionsHTML;
+    }
+
+    function playAudio() {
+      const q = quizData[currentLang][currentQuestion];
+      if (
+        (currentLang === "Hindi" || currentLang === "Kannada") &&
+        window.responsiveVoice &&
+        typeof window.responsiveVoice.speak === "function"
+      ) {
+        // Use ResponsiveVoice for Hindi and Kannada
+        const voice = currentLang === "Hindi" ? "Hindi Female" : "Kannada Female";
+        window.responsiveVoice.speak(q.word, voice);
+      } else if (q.audio) {
+        const audio = document.getElementById("wordAudio");
+        audio.play();
+      }
+    }
+
+    function checkAnswer(selected, correct) {
+      if (selected === correct) {
+        document.getElementById("correctSound").play();
+        alert("✅ Correct!");
+      } else {
+        document.getElementById("wrongSound").play();
+        alert("❌ Try again! Keep going!");
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      loadQuestion();
+    }
+
+    function genieTalk() {
+      alert("🧞‍♂️ I'm here to guide you through your language journey!");
+    }
+
+  // Wait for ResponsiveVoice to load before first question
+  function waitForResponsiveVoice(cb) {
+    if (window.responsiveVoice && typeof window.responsiveVoice.speak === "function") {
+      cb();
+    } else {
+      setTimeout(() => waitForResponsiveVoice(cb), 100);
+    }
+  }
+  if (currentLang === "Hindi" || currentLang === "Kannada") {
+    waitForResponsiveVoice(loadQuestion);
+  } else {
+    loadQuestion();
+  }
+  </script>
+  <!-- ResponsiveVoice JS -->
+  <script src="https://code.responsivevoice.org/responsivevoice.js?key=Kzoi5Odx"></script>
+</body>
+</html>
