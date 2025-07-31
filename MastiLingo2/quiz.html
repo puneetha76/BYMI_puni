@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MastiLingo Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      margin: 0;
+      background: #1e293b;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      width: 100%;
+      padding: 20px;
+      background: #3b82f6;
+      color: white;
+      text-align: center;
+    }
+    .flashcard {
+      background: #334155;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .flashcard h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .quiz-box {
+      background: #0f172a;
+      padding: 30px;
+      border-radius: 16px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+    .options button {
+      background: #64748b;
+      color: white;
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .options button:hover {
+      background: #3b82f6;
+    }
+    #genie {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 80px;
+      animation: float 2s ease-in-out infinite;
+      cursor: pointer;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧞‍♂️ MastiLingo Quiz</h1>
+  </header>
+
+  <div class="flashcard">
+    <h2 id="flashWord">नमस्ते</h2>
+    <p>Transliteration: namaste</p>
+    <p>English: Hello</p>
+    <button onclick="playAudio('audio/hindi/word1.mp3')">🔊 Pronounce</button>
+  </div>
+
+  <div class="quiz-box">
+    <h2>Translate: नमस्ते</h2>
+    <button onclick="checkAnswer(this)">Hello</button>
+    <button onclick="checkAnswer(this)">Coffee</button>
+    <button onclick="checkAnswer(this)">Thank you</button>
+    <button onclick="checkAnswer(this)">Water</button>
+    <br><br>
+    <button onclick="nextQuestion()">Next ➡️</button>
+  </div>
+
+  <img id="genie" src="images/genie.png" alt="Genie Assistant" onclick="talkGenie()">
+
+  <audio id="pronounceAudio"></audio>
+  <audio id="successAudio" src="sounds/success.mp3"></audio>
+  <audio id="failAudio" src="sounds/fail.mp3"></audio>
+
+  <script>
+    function playAudio(src) {
+      const audio = document.getElementById('pronounceAudio');
+      audio.src = src;
+      audio.play();
+    }
+
+    function checkAnswer(button) {
+      const correct = button.textContent === "Hello";
+      if (correct) {
+        document.getElementById("successAudio").play();
+        alert("✅ Correct!");
+      } else {
+        document.getElementById("failAudio").play();
+        alert("❌ Try again! Genie bottle lost!");
+      }
+    }
+
+    function nextQuestion() {
+      alert("Next question loading..."); // In real use: load from JSON
+    }
+
+    function talkGenie() {
+      alert("🧞‍♂️ Let's keep learning together!");
+    }
+  </script>
+</body>
+</html>

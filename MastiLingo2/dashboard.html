@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MastiLingo Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      margin: 0;
+      background: linear-gradient(to right, #dbeafe, #e0f7fa);
+      color: #333;
+    }
+    header {
+      padding: 20px;
+      background: #3b82f6;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .xp-bar {
+      background: #fff;
+      border-radius: 12px;
+      padding: 5px 15px;
+      color: #3b82f6;
+      font-weight: bold;
+    }
+    .dashboard {
+      padding: 40px;
+      max-width: 1000px;
+      margin: auto;
+      position: relative;
+    }
+    .milestones {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .milestone {
+      width: 120px;
+      height: 120px;
+      background: #e0e7ff;
+      border-radius: 50%;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 10px;
+      position: relative;
+      transition: transform 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      border: 4px solid #3b82f6;
+    }
+    .milestone img {
+      width: 50px;
+    }
+    .milestone h2 {
+      font-size: 12px;
+      color: #1e3a8a;
+      margin: 5px 0 0;
+    }
+    .start-btn {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #3b82f6;
+      color: white;
+      padding: 5px 10px;
+      font-size: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      animation: glow 2s infinite;
+    }
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 5px #3b82f6; }
+      50% { box-shadow: 0 0 10px #60a5fa; }
+    }
+    #genie {
+      position: absolute;
+      bottom: 140px;
+      left: 10%;
+      width: 80px;
+      animation: float 2s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .stats {
+      text-align: center;
+      margin-top: 20px;
+      color: #1e3a8a;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MastiLingo</h1>
+    <div class="xp-bar">XP: 130 | Level: 2 | Genie Bottles:🏺 x 4</div>
+  </header>
+
+  <div class="dashboard">
+    <h2 style="text-align:center; color:#1e3a8a;">Your Milestones</h2>
+    <div class="milestones">
+      <div class="milestone">
+        <img src="images/star.png" alt="Level 1">
+        <h2>Start Here</h2>
+        <button class="start-btn" onclick="startQuiz()">Start</button>
+      </div>
+      <div class="milestone">
+        <img src="images/lock.png" alt="Level 2">
+        <h2>Greetings</h2>
+      </div>
+      <div class="milestone">
+        <img src="images/chest.png" alt="Level 3">
+        <h2>Everyday Talk</h2>
+      </div>
+      <div class="milestone">
+        <img src="images/trophy.png" alt="Level 4">
+        <h2>Challenge</h2>
+      </div>
+    </div>
+
+    <img id="genie" src="images/genie.png" alt="Floating Genie" onclick="genieTalk()">
+
+    <div class="stats">
+      <p>🔥 Streak: 3 Days | 🏆 Leaderboard Rank: #12</p>
+      <p>💬 Word Learned Today: 7</p>
+    </div>
+  </div>
+
+  <audio id="genieAudio" src="sounds/genie-start.mp3" preload="auto"></audio>
+
+  <script>
+    function startQuiz() {
+      window.location.href = "quiz.html";
+    }
+    function genieTalk() {
+      document.getElementById("genieAudio").play();
+      alert("🧞‍♂️ Let’s start with the basics! Click the glowing star to begin!");
+    }
+  </script>
+</body>
+</html>
