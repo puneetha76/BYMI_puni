@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MastiLingo Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to bottom, #0f172a, #1e293b);
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    header {
+      margin-bottom: 20px;
+    }
+    header h1 {
+      font-size: 28px;
+      color: #60a5fa;
+      animation: flicker 2.5s infinite alternate;
+    }
+    @keyframes flicker {
+      0% { opacity: 0.9; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); color: #3b82f6; }
+      100% { opacity: 0.95; transform: scale(1); }
+    }
+
+    .quiz-container {
+      background: #334155;
+      padding: 25px;
+      border-radius: 20px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    .question-box {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .audio-btn {
+      background-color: #1d4ed8;
+      padding: 10px 16px;
+      font-size: 16px;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background-color: #64748b;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .options button.correct {
+      background-color: #16a34a !important;
+    }
+
+    .options button.wrong {
+      background-color: #dc2626 !important;
+    }
+
+    .options button:hover {
+      background-color: #3b82f6;
+    }
+
+    #nextBtn {
+      background-color: #22c55e;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #scoreBox {
+      margin-top: 15px;
+      font-size: 18px;
+      color: #facc15;
+    }
+
+    #genie {
+      width: 70px;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      animation: float 2s ease-in-out infinite;
+      cursor: pointer;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* New styles for Level 2 */
+    .drag-drop-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .drag-items-container, .drop-zones-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .drag-item {
+        background: #93c5fd;
+        color: #1e3a8a;
+        padding: 12px 20px;
+        border-radius: 15px;
+        cursor: grab;
+        font-size: 1.2rem;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .drag-item:active {
+        cursor: grabbing;
+        transform: scale(0.95);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .drop-zone {
+        background: #475569;
+        color: #e2e8f0;
+        padding: 12px 20px;
+        border-radius: 15px;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px dashed #94a3b8;
+        transition: background 0.2s, border-color 0.2s;
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .drop-zone.hover {
+        background: #64748b;
+        border-color: #fff;
+    }
+    
+    .drop-zone.correct {
+        background-color: #16a34a;
+        border-color: #86efac;
+    }
+    
+    .drop-zone.wrong {
+        background-color: #dc2626;
+        border-color: #fda4af;
+    }
+    
+    /* Style for the placed English word inside the drop zone */
+    .drop-zone.filled .placed-item {
+      background: none; /* No background, so parent's color shows through */
+      color: inherit;
+      padding: 0;
+      cursor: pointer;
+      pointer-events: all; /* Make it clickable */
+    }
+    
+    .placed-item {
+      background: #93c5fd;
+      color: #1e3a8a;
+      padding: 12px 20px;
+      border-radius: 15px;
+      cursor: pointer; /* Change cursor to indicate clickability */
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    #checkDragBtn {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🧞 Welcome to MastiLingo Quiz!</h1>
+    <div id="languageDisplay" style="font-size: 18px; margin-top: 8px;"></div>
+    <button onclick="resetQuizLevel()" style="margin-top:12px; background:#f87171; color:white; border:none; border-radius:8px; padding:7px 18px; font-size:15px; font-weight:bold; cursor:pointer; float:right;">Reset Quiz Level</button>
+  </header>
+    // Reset quiz level and go to Level 1
+    function resetQuizLevel() {
+      localStorage.removeItem('currentQuizLevel');
+      showLevel(1);
+    }
+
+
+  <div class="quiz-container" id="level1Quiz">
+    <div class="question-box" id="questionText">Loading...</div>
+    <button class="audio-btn" onclick="playAudio()">🔊 Hear Pronunciation</button>
+    <div class="options" id="optionsArea"></div>
+    <button id="nextBtn" onclick="nextQuestion()">Next ➡️</button>
+    <div id="scoreBox"></div>
+    <button id="toLevel2Btn" style="display:none; margin-top:20px;" onclick="showLevel(2)">Go to Level 2 ➡️</button>
+    <button id="restartLevel1Btn" style="display:none; margin-top:10px; background:#64748b; color:white; border:none; border-radius:10px; padding:8px 18px; font-size:15px;" onclick="restartLevel1()">Restart Level 1 🔄</button>
+  </div>
+
+  <div class="quiz-container" id="level2Quiz" style="display:none;">
+    <div class="question-box">Match the English word to its Kannada equivalent:</div>
+    <div class="drag-drop-container">
+      <div id="dropZones" class="drop-zones-container"></div>
+      <div id="dragItems" class="drag-items-container"></div>
+    </div>
+    <button id="checkDragBtn" class="audio-btn" onclick="checkDragAndDrop()">Check Answers</button>
+    <div id="dragScoreBox" class="mt-4"></div>
+    <button id="toLevel3Btn" style="display:none; margin-top:20px;" onclick="showLevel(3)">Go to Level 3 ➡️</button>
+  </div>
+
+  <div class="quiz-container" id="level3Quiz" style="display:none;">
+    <div class="question-box">Type the English meaning for each word:</div>
+    <div id="fillBlanksArea"></div>
+    <button id="checkFillBtn" class="audio-btn" onclick="checkFillBlanks()">Check Answers</button>
+    <div id="fillScoreBox" class="mt-4"></div>
+  </div>
+
+  <img id="genie" src="images/genie.png" onclick="genieTalk()" alt="Genie" />
+
+  <audio id="wordAudio"></audio>
+  <audio id="correctSound" src="sounds/success.mp3"></audio>
+  <audio id="wrongSound" src="sounds/fail.mp3"></audio>
+
+  <script src="https://code.responsivevoice.org/responsivevoice.js?key=Kzoi5Odx"></script>
+
+  <script>
+    // Quiz data for all levels and languages (expand as needed)
+    const quizData = {
+      Hindi: [
+        { word: "नमस्ते", translit: "Namaste", english: "Hello", emoji: "👋", image: "images/hello.png", audio: "audio/hindi/hindi_1.mp3", options: ["Hello", "Thank you", "Sorry", "Yes"] },
+        { word: "धन्यवाद", translit: "Dhanyavaad", english: "Thank you", emoji: "🙏", image: "images/thankyou.png", audio: "audio/hindi/hindi_2.mp3", options: ["Thank you", "Hello", "No", "Food"] },
+        { word: "कृपया", translit: "Kripya", english: "Please", emoji: "🙇", image: "images/please.png", audio: "audio/hindi/hindi_3.mp3", options: ["Please", "Sorry", "Yes", "Water"] },
+        { word: "मुझे माफ करें", translit: "Mujhe maaf karein", english: "Sorry", emoji: "😔", image: "images/sorry.png", audio: "audio/hindi/hindi_4.mp3", options: ["Sorry", "Hello", "No", "Food"] },
+      ],
+      Kannada: [
+        { word: "ನಮಸ್ಕಾರ", translit: "Namaskara", english: "Hello", emoji: "👋", image: "images/hello.png", audio: "audio/kannada/kannada_1.mp3", options: ["Hello", "Thank you", "Sorry", "Yes"] },
+        { word: "ಧನ್ಯವಾದಗಳು", translit: "Dhanyavadagalu", english: "Thank you", emoji: "🙏", image: "images/thankyou.png", audio: "audio/kannada/kannada_2.mp3", options: ["Thank you", "Hello", "No", "Food"] },
+        { word: "ದಯವಿಟ್ಟು", translit: "Dayavittu", english: "Please", emoji: "🙇", image: "images/please.png", audio: "audio/kannada/kannada_3.mp3", options: ["Please", "Sorry", "Yes", "Water"] },
+        { word: "ಕ್ಷಮಿಸಿ", translit: "Kshamisi", english: "Sorry", emoji: "😔", image: "images/sorry.png", audio: "audio/kannada/kannada_4.mp3", options: ["Sorry", "Hello", "No", "Food"] },
+      ],
+      Telugu: [
+        { word: "నమస్తే", translit: "Namastē", english: "Hello", emoji: "👋", image: "images/hello.png", audio: "audio/telugu/telugu_1.mp3", options: ["Hello", "Thank you", "Sorry", "Yes"] },
+        { word: "ధన్యవాదాలు", translit: "Dhanyavādālu", english: "Thank you", emoji: "🙏", image: "images/thankyou.png", audio: "audio/telugu/telugu_2.mp3", options: ["Thank you", "Hello", "No", "Food"] },
+        { word: "దయచేసి", translit: "Dayachēsi", english: "Please", emoji: "🙇", image: "images/please.png", audio: "audio/telugu/telugu_3.mp3", options: ["Please", "Sorry", "Yes", "Water"] },
+        { word: "క్షమించండి", translit: "Kṣamin̄caṇḍi", english: "Sorry", emoji: "😔", image: "images/sorry.png", audio: "audio/telugu/telugu_4.mp3", options: ["Sorry", "Hello", "No", "Food"] },
+      ],
+      Tamil: [
+        { word: "வணக்கம்", translit: "Vaṇakkam", english: "Hello", emoji: "👋", image: "images/hello.png", audio: "audio/tamil/tamil_1.mp3", options: ["Hello", "Thank you", "Sorry", "Yes"] },
+        { word: "நன்றி", translit: "Naṉṟi", english: "Thank you", emoji: "🙏", image: "images/thankyou.png", audio: "audio/tamil/tamil_2.mp3", options: ["Thank you", "Hello", "No", "Food"] },
+        { word: "தயவு", translit: "Tayavu", english: "Please", emoji: "🙇", image: "images/please.png", audio: "audio/tamil/tamil_3.mp3", options: ["Please", "Sorry", "Yes", "Water"] },
+        { word: "மன்னிக்கவும்", translit: "Maṉṉikkavum", english: "Sorry", emoji: "😔", image: "images/sorry.png", audio: "audio/tamil/tamil_4.mp3", options: ["Sorry", "Hello", "No", "Food"] },
+      ],
+      Malayalam: [
+        { word: "നമസ്കാരം", translit: "Namaskāram", english: "Hello", emoji: "👋", image: "images/hello.png", audio: "audio/malayalam/malayalam_1.mp3", options: ["Hello", "Thank you", "Sorry", "Yes"] },
+        { word: "നന്ദി", translit: "Nandi", english: "Thank you", emoji: "🙏", image: "images/thankyou.png", audio: "audio/malayalam/malayalam_2.mp3", options: ["Thank you", "Hello", "No", "Food"] },
+        { word: "ദയവായി", translit: "Dayavāyi", english: "Please", emoji: "🙇", image: "images/please.png", audio: "audio/malayalam/malayalam_3.mp3", options: ["Please", "Sorry", "Yes", "Water"] },
+        { word: "ക്ഷമിക്കണം", translit: "Kṣamikkaṇaṁ", english: "Sorry", emoji: "😔", image: "images/sorry.png", audio: "audio/malayalam/malayalam_4.mp3", options: ["Sorry", "Hello", "No", "Food"] },
+      ]
+    };
+
+    let currentLang = localStorage.getItem("selectedLanguage") || "Kannada";
+    let currentQuestion = 0;
+    let score = 0;
+
+    document.getElementById("languageDisplay").innerText = `🌐 Language: ${currentLang}`;
+
+    // LEVEL 1: MCQ
+    function loadQuestion() {
+      const q = quizData[currentLang][currentQuestion];
+      if (!q) {
+        document.getElementById("questionText").innerText = "🎉 You've completed Level 1!";
+        document.getElementById("optionsArea").innerHTML = "";
+        document.getElementById("nextBtn").style.display = "none";
+        document.getElementById("scoreBox").innerText = `✅ Final Score: ${score} / ${quizData[currentLang].length}`;
+        document.getElementById("toLevel2Btn").style.display = "inline-block";
+        document.getElementById("restartLevel1Btn").style.display = "inline-block";
+        return;
+      }
+      document.getElementById("questionText").innerText = `${q.word} (${q.translit})`;
+      document.getElementById("wordAudio").src = q.audio;
+      document.getElementById("scoreBox").innerText = `Score: ${score} / ${quizData[currentLang].length}`;
+      const optionsHTML = q.options.map(opt =>
+        `<button onclick=\"checkAnswer(this, '${opt}', '${q.english}')\">${opt}</button>`
+      ).join("");
+      document.getElementById("optionsArea").innerHTML = optionsHTML;
+      document.getElementById("restartLevel1Btn").style.display = "none";
+      playAudio();
+    }
+
+    function playAudio() {
+      const q = quizData[currentLang][currentQuestion];
+      const langVoiceMap = {
+        Hindi: "Hindi Female",
+        Tamil: "Tamil Female",
+        Kannada: "Kannada Female",
+        Telugu: "Telugu Female",
+        Malayalam: "Malayalam Female"
+      };
+      if (responsiveVoice && langVoiceMap[currentLang]) {
+        responsiveVoice.speak(q.word, langVoiceMap[currentLang]);
+      } else {
+        document.getElementById("wordAudio").play();
+      }
+    }
+
+    function checkAnswer(button, selected, correct) {
+      const allButtons = document.querySelectorAll(".options button");
+      allButtons.forEach(btn => btn.disabled = true);
+      if (selected === correct) {
+        button.classList.add("correct");
+        score++;
+        document.getElementById("correctSound").play();
+      } else {
+        button.classList.add("wrong");
+        allButtons.forEach(btn => {
+          if (btn.innerText === correct) btn.classList.add("correct");
+        });
+        document.getElementById("wrongSound").play();
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      loadQuestion();
+    }
+
+    // LEVEL 2: DRAG AND DROP
+    function showLevel(level) {
+      // Persist the current level in localStorage
+      localStorage.setItem('currentQuizLevel', level);
+      document.getElementById('level1Quiz').style.display = (level === 1) ? '' : 'none';
+      document.getElementById('level2Quiz').style.display = (level === 2) ? '' : 'none';
+      document.getElementById('level3Quiz').style.display = (level === 3) ? '' : 'none';
+      if (level === 1) {
+        if (currentQuestion < quizData[currentLang].length) {
+          document.getElementById('nextBtn').style.display = '';
+          document.getElementById('toLevel2Btn').style.display = 'none';
+          loadQuestion();
+        } else {
+          document.getElementById('nextBtn').style.display = 'none';
+          document.getElementById('toLevel2Btn').style.display = 'inline-block';
+          document.getElementById('restartLevel1Btn').style.display = 'inline-block';
+        }
+      }
+      if (level === 2) initDragAndDrop();
+      if (level === 3) initFillBlanks();
+    }
+
+    function restartLevel1() {
+      currentQuestion = 0;
+      score = 0;
+      document.getElementById('nextBtn').style.display = '';
+      document.getElementById('toLevel2Btn').style.display = 'none';
+      loadQuestion();
+    }
+
+    function shuffle(arr) {
+      return arr.map(a => [Math.random(), a]).sort().map(a => a[1]);
+    }
+
+    function initDragAndDrop() {
+        const data = quizData[currentLang];
+        // Use a unique ID for each drag item and drop zone, handle spaces and special chars
+        const dragWords = shuffle(data.map(item => item.english));
+        const dropWords = shuffle(data);
+
+        const dragContainer = document.getElementById('dragItems');
+        const dropContainer = document.getElementById('dropZones');
+        dragContainer.innerHTML = '';
+        dropContainer.innerHTML = '';
+
+        // Create the draggable English words
+        dragWords.forEach((englishWord) => {
+            const drag = document.createElement('div');
+            drag.className = 'drag-item';
+            drag.draggable = true;
+            drag.textContent = englishWord;
+            // Use encodeURIComponent for unique IDs
+            drag.id = `drag-${encodeURIComponent(englishWord)}`;
+            drag.dataset.english = englishWord;
+            drag.ondragstart = e => {
+                e.dataTransfer.setData('text/plain', e.target.dataset.english);
+                setTimeout(() => e.target.style.display = 'none', 0);
+            };
+            dragContainer.appendChild(drag);
+        });
+
+        // Create the drop zones with the local language words
+        dropWords.forEach((item) => {
+            const drop = document.createElement('div');
+            drop.className = 'drop-zone';
+            drop.textContent = item.word;
+            drop.dataset.correct = item.english;
+
+            drop.ondragover = e => { e.preventDefault(); drop.classList.add('hover'); };
+            drop.ondragleave = e => { drop.classList.remove('hover'); };
+            drop.ondrop = e => {
+                e.preventDefault();
+                const answer = e.dataTransfer.getData('text/plain');
+                drop.classList.remove('hover');
+
+                // If the drop zone already has a child, move it back to the drag container first
+                const existingPlacedItem = drop.querySelector('.placed-item');
+                if (existingPlacedItem) {
+                    const originalDragItem = document.getElementById(`drag-${encodeURIComponent(existingPlacedItem.dataset.english)}`);
+                    if (originalDragItem) {
+                        dragContainer.appendChild(originalDragItem);
+                        originalDragItem.style.display = '';
+                    }
+                    drop.removeChild(existingPlacedItem);
+                }
+
+                // Now append the new item
+                const draggedElement = document.getElementById(`drag-${encodeURIComponent(answer)}`);
+                if (draggedElement) {
+                    const clonedDragItem = document.createElement('div');
+                    clonedDragItem.className = 'placed-item';
+                    clonedDragItem.textContent = draggedElement.textContent;
+                    clonedDragItem.dataset.english = draggedElement.dataset.english;
+
+                    drop.appendChild(clonedDragItem);
+                    drop.classList.add('filled');
+                    draggedElement.style.display = 'none';
+                }
+            };
+
+            // Revert functionality: click the placed item to move it back
+            drop.onclick = e => {
+                const placedItem = drop.querySelector('.placed-item');
+                if (placedItem && e.target === placedItem) {
+                    const englishWord = placedItem.dataset.english;
+                    const originalDragItem = document.getElementById(`drag-${encodeURIComponent(englishWord)}`);
+                    if (originalDragItem) {
+                        dragContainer.appendChild(originalDragItem);
+                        originalDragItem.style.display = '';
+                    }
+                    drop.removeChild(placedItem);
+                    drop.classList.remove('filled');
+                }
+            };
+
+            dropContainer.appendChild(drop);
+        });
+
+        document.getElementById('dragScoreBox').innerText = '';
+        document.getElementById('toLevel3Btn').style.display = 'none';
+    }
+
+    function checkDragAndDrop() {
+        const drops = document.querySelectorAll('#dropZones .drop-zone');
+        let correct = 0;
+        let allItemsPlaced = true;
+        
+        drops.forEach(drop => {
+            const placedItem = drop.querySelector('.placed-item');
+            if (placedItem) {
+                if (placedItem.dataset.english === drop.dataset.correct) {
+                    correct++;
+                    drop.classList.add('correct');
+                    drop.classList.remove('wrong');
+                } else {
+                    drop.classList.add('wrong');
+                    drop.classList.remove('correct');
+                }
+            } else {
+                allItemsPlaced = false;
+            }
+        });
+        
+        if (!allItemsPlaced) {
+            alert("Please place all the words before checking your answers!");
+            return;
+        }
+
+        // Play sounds and display final score
+        if (correct === drops.length) {
+            document.getElementById('correctSound').play();
+            document.getElementById('dragScoreBox').innerText = `Score: ${correct} / ${drops.length} 🎉 Great job!`;
+            document.getElementById('toLevel3Btn').style.display = 'inline-block';
+        } else {
+            document.getElementById('wrongSound').play();
+            document.getElementById('dragScoreBox').innerText = `Score: ${correct} / ${drops.length}`;
+        }
+    }
+
+    // LEVEL 3: FILL IN THE BLANKS
+    function initFillBlanks() {
+      const data = quizData[currentLang];
+      const area = document.getElementById('fillBlanksArea');
+      area.innerHTML = '';
+      data.forEach((q, idx) => {
+        const row = document.createElement('div');
+        row.className = 'mb-4 flex items-center gap-4';
+        row.innerHTML = `<span class="text-2xl">${q.word}</span> <input type="text" id="fill${idx}" class="border rounded px-2 py-1" placeholder="English meaning">`;
+        area.appendChild(row);
+      });
+      document.getElementById('fillScoreBox').innerText = '';
+    }
+
+    function checkFillBlanks() {
+      const data = quizData[currentLang];
+      let correct = 0;
+      data.forEach((q, idx) => {
+        const val = document.getElementById(`fill${idx}`).value.trim();
+        if (val.toLowerCase() === q.english.toLowerCase()) correct++;
+      });
+      document.getElementById('fillScoreBox').innerText = `Score: ${correct} / ${data.length}` + (correct === data.length ? ' 🏆 All correct!' : '');
+    }
+
+    function genieTalk() {
+      alert("🧞‍♂️ I'm here to help! Keep learning!");
+    }
+
+    // INIT
+    window.onload = () => {
+      // Check if a quiz level is stored in localStorage
+      const savedLevel = parseInt(localStorage.getItem('currentQuizLevel'), 10);
+      if (savedLevel === 2 || savedLevel === 3) {
+        showLevel(savedLevel);
+      } else {
+        showLevel(1);
+      }
+    };
+  </script>
+</body>
+</html>
