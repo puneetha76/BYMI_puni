@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MastiLingo Dashboard</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
@@ -135,396 +133,46 @@
   </style>
 </head>
 <body>
+  <header>
+    <h1>🌟 MastiLingo Milestone Path</h1>
+    <div class="xp-bar">XP: 130 | Level: 2 | Genie Bottles:🏺 x 4</div>
+  </header>
 
-  <!-- Sidebar with Letters Tab -->
-  <div class="flex">
-    <aside class="w-48 min-h-screen bg-slate-900 text-white flex flex-col py-8 px-4 gap-4">
-      <a href="#" class="flex items-center gap-2 text-lg font-bold mb-6"><span class="text-green-400">🏠</span> <span>Dashboard</span></a>
-      <button onclick="showLettersModal()" class="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-slate-700 transition"><span class="text-blue-300">한</span> <span>Letters</span></button>
-      <a href="flashcards.html" class="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-green-200 text-green-700 bg-green-100 font-semibold transition"><span class="text-green-400">🃏</span> <span>Flashcards</span></a>
-      <a href="reward.html" class="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-yellow-200 text-yellow-700 bg-yellow-100 font-semibold transition"><span class="text-yellow-400">🏆</span> <span>Rewards</span></a>
-      <!-- ...other sidebar items can go here... -->
-    </aside>
-    <div class="flex-1">
-
-      <header>
-        <div class="flex items-center justify-between">
-          <h1>🌟 MastiLingo Milestone Path</h1>
-          <button onclick="goBackToWelcome()" class="bg-pink-200 hover:bg-pink-400 text-pink-900 font-bold py-2 px-4 rounded-lg shadow transition ml-4">← Go Back</button>
-        </div>
-        <div class="xp-bar">XP: 130 | Level: 2 | Genie Bottles:🏺 x 4</div>
-      </header>
-
-
-      <div class="dashboard">
-        <h2 style="text-align:center; color:#1e3a8a;">Your Milestones</h2>
-        <div class="milestones">
-          <div class="milestone">
-            <img src="images/star.jpg.jpg" alt="Level 1">
-            <h2>Level1</h2>
-            <button class="start-btn" onclick="startQuiz()">Start</button>
-          </div>
-          <div class="milestone">
-            <img src="images/genielamp.jpg" alt="Level 2">
-            <h2>Level 2</h2>
-          </div>
-          <div class="milestone">
-            <img src="images/chest.jpg" alt="Level 3">
-            <h2>Level 3</h2>
-          </div>
-          <div class="milestone">
-            <img src="images/trophy.jpg" alt="Level 4" >
-            <h2>Level 4</h2>
-          </div>
-        </div>
-
-        <img id="genie" src="images/genie.png" alt="Floating Genie" onclick="genieTalk()">
-
-        <div class="stats">
-          <p>🔥 Streak: 3 Days | 🏆 Leaderboard Rank: #12</p>
-          <p>💬 Word Learned Today: 7</p>
-        </div>
+  <div class="dashboard">
+    <h2 style="text-align:center; color:#1e3a8a;">Your Milestones</h2>
+    <div class="milestones">
+      <div class="milestone">
+        <img src="images/star.jpg.jpg" alt="Level 1">
+        <h2>Level1</h2>
+        <button class="start-btn" onclick="startQuiz()">Start</button>
+      </div>
+      <div class="milestone">
+        <img src="images/genielamp.jpg" alt="Level 2">
+        <h2>Level 2</h2>
+      </div>
+      <div class="milestone">
+        <img src="images/chest.jpg" alt="Level 3">
+        <h2>Level 3</h2>
+      </div>
+      <div class="milestone">
+        <img src="images/trophy.jpg" alt="Level 4" >
+        <h2>Level 4</h2>
       </div>
     </div>
-  </div>
 
-  <!-- Letters Modal -->
-  <div id="lettersModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-2xl shadow-2xl p-6 w-[95vw] max-w-lg md:max-w-xl lg:max-w-2xl relative animate-fadeIn">
-      <button onclick="hideLettersModal()" aria-label="Close Letters Modal" class="absolute top-3 right-3 z-50 text-gray-400 hover:text-red-500 text-3xl font-extrabold rounded-full w-12 h-12 flex items-center justify-center border-2 border-gray-200 shadow-lg bg-white transition hover:scale-110">✖</button>
-      <h2 class="text-3xl font-extrabold text-blue-700 mb-2 flex items-center gap-2 animate-bounce">
-        <span id="lettersEmoji">🔤</span> Letters of <span id="lettersLang" class="ml-1">Hindi</span>
-      </h2>
-      <div id="lettersGrid" class="grid grid-cols-7 gap-4 mt-6 overflow-y-auto max-h-[60vh] pr-2">
-        <!-- Letters will be injected here -->
-      </div>
-      <div class="mt-6 text-center text-gray-500 text-sm"></div>
+    <img id="genie" src="images/genie.png" alt="Floating Genie" onclick="genieTalk()">
+
+    <div class="stats">
+      <p>🔥 Streak: 3 Days | 🏆 Leaderboard Rank: #12</p>
+      <p>💬 Word Learned Today: 7</p>
     </div>
   </div>
-  <style>
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    .animate-fadeIn { animation: fadeIn 0.5s; }
-    @keyframes bounceOnce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    .letter-emoji-btn { animation: bounceOnce 0.7s; }
-    .letter-emoji-btn:hover, .letter-emoji-btn:focus { background: #fbbf24 !important; color: #b91c1c !important; box-shadow: 0 0 0 4px #fde68a; }
-  </style>
-
 
   <audio id="genieAudio" src="sounds/genie-start.mp3" preload="auto"></audio>
-  <audio id="letterAudio"></audio>
 
   <script>
-    // Letters data for each language (example: Hindi)
-    // Add English translations for each letter
-    const lettersData = {
-      Hindi: [
-        { group: 'स्वर (Vowels) 🟣', letters: [
-          { char: 'अ', audio: 'audio/hindi/letters/a.mp3', en: 'a' },
-          { char: 'आ', audio: 'audio/hindi/letters/aa.mp3', en: 'aa' },
-          { char: 'इ', audio: 'audio/hindi/letters/i.mp3', en: 'i' },
-          { char: 'ई', audio: 'audio/hindi/letters/ii.mp3', en: 'ii' },
-          { char: 'उ', audio: 'audio/hindi/letters/u.mp3', en: 'u' },
-          { char: 'ऊ', audio: 'audio/hindi/letters/uu.mp3', en: 'uu' },
-          { char: 'ए', audio: 'audio/hindi/letters/e.mp3', en: 'e' },
-          { char: 'ऐ', audio: 'audio/hindi/letters/ai.mp3', en: 'ai' },
-          { char: 'ओ', audio: 'audio/hindi/letters/o.mp3', en: 'o' },
-          { char: 'औ', audio: 'audio/hindi/letters/au.mp3', en: 'au' }
-        ]},
-        { group: 'व्यंजन (Consonants) 🟢', letters: [
-          { char: 'क', audio: 'audio/hindi/letters/ka.mp3', en: 'ka' },
-          { char: 'ख', audio: 'audio/hindi/letters/kha.mp3', en: 'kha' },
-          { char: 'ग', audio: 'audio/hindi/letters/ga.mp3', en: 'ga' },
-          { char: 'घ', audio: 'audio/hindi/letters/gha.mp3', en: 'gha' },
-          { char: 'च', audio: 'audio/hindi/letters/cha.mp3', en: 'cha' },
-          { char: 'छ', audio: 'audio/hindi/letters/chha.mp3', en: 'chha' },
-          { char: 'ज', audio: 'audio/hindi/letters/ja.mp3', en: 'ja' },
-          { char: 'झ', audio: 'audio/hindi/letters/jha.mp3', en: 'jha' },
-          { char: 'ट', audio: 'audio/hindi/letters/ta.mp3', en: 'ṭa' },
-          { char: 'ठ', audio: 'audio/hindi/letters/tha.mp3', en: 'ṭha' },
-          { char: 'ड', audio: 'audio/hindi/letters/da.mp3', en: 'ḍa' },
-          { char: 'ढ', audio: 'audio/hindi/letters/dha.mp3', en: 'ḍha' },
-          { char: 'ण', audio: 'audio/hindi/letters/na.mp3', en: 'ṇa' },
-          { char: 'त', audio: 'audio/hindi/letters/ta2.mp3', en: 'ta' },
-          { char: 'थ', audio: 'audio/hindi/letters/tha2.mp3', en: 'tha' },
-          { char: 'द', audio: 'audio/hindi/letters/da2.mp3', en: 'da' },
-          { char: 'ध', audio: 'audio/hindi/letters/dha2.mp3', en: 'dha' },
-          { char: 'न', audio: 'audio/hindi/letters/na2.mp3', en: 'na' },
-          { char: 'प', audio: 'audio/hindi/letters/pa.mp3', en: 'pa' },
-          { char: 'फ', audio: 'audio/hindi/letters/pha.mp3', en: 'pha' },
-          { char: 'ब', audio: 'audio/hindi/letters/ba.mp3', en: 'ba' },
-          { char: 'भ', audio: 'audio/hindi/letters/bha.mp3', en: 'bha' },
-          { char: 'म', audio: 'audio/hindi/letters/ma.mp3', en: 'ma' },
-          { char: 'य', audio: 'audio/hindi/letters/ya.mp3', en: 'ya' },
-          { char: 'र', audio: 'audio/hindi/letters/ra.mp3', en: 'ra' },
-          { char: 'ल', audio: 'audio/hindi/letters/la.mp3', en: 'la' },
-          { char: 'व', audio: 'audio/hindi/letters/va.mp3', en: 'va' },
-          { char: 'श', audio: 'audio/hindi/letters/sha.mp3', en: 'sha' },
-          { char: 'ष', audio: 'audio/hindi/letters/shha.mp3', en: 'ṣa' },
-          { char: 'स', audio: 'audio/hindi/letters/sa.mp3', en: 'sa' },
-          { char: 'ह', audio: 'audio/hindi/letters/ha.mp3', en: 'ha' }
-        ]}
-      ],
-      Kannada: [
-        { group: 'ಸ್ವರಗಳು (Vowels) 🟣', letters: [
-          { char: 'ಅ', audio: 'audio/kannada/letters/a.mp3', en: 'a' },
-          { char: 'ಆ', audio: 'audio/kannada/letters/aa.mp3', en: 'aa' },
-          { char: 'ಇ', audio: 'audio/kannada/letters/i.mp3', en: 'i' },
-          { char: 'ಈ', audio: 'audio/kannada/letters/ii.mp3', en: 'ii' },
-          { char: 'ಉ', audio: 'audio/kannada/letters/u.mp3', en: 'u' },
-          { char: 'ಊ', audio: 'audio/kannada/letters/uu.mp3', en: 'uu' },
-          { char: 'ಎ', audio: 'audio/kannada/letters/e.mp3', en: 'e' },
-          { char: 'ಏ', audio: 'audio/kannada/letters/ee.mp3', en: 'ee' },
-          { char: 'ಐ', audio: 'audio/kannada/letters/ai.mp3', en: 'ai' },
-          { char: 'ಒ', audio: 'audio/kannada/letters/o.mp3', en: 'o' },
-          { char: 'ಓ', audio: 'audio/kannada/letters/oo.mp3', en: 'oo' },
-          { char: 'ಔ', audio: 'audio/kannada/letters/au.mp3', en: 'au' }
-        ]},
-        { group: 'ವ್ಯಂಜನಗಳು (Consonants) 🟢', letters: [
-          { char: 'ಕ', audio: 'audio/kannada/letters/ka.mp3', en: 'ka' },
-          { char: 'ಖ', audio: 'audio/kannada/letters/kha.mp3', en: 'kha' },
-          { char: 'ಗ', audio: 'audio/kannada/letters/ga.mp3', en: 'ga' },
-          { char: 'ಘ', audio: 'audio/kannada/letters/gha.mp3', en: 'gha' },
-          { char: 'ಚ', audio: 'audio/kannada/letters/cha.mp3', en: 'cha' },
-          { char: 'ಛ', audio: 'audio/kannada/letters/chha.mp3', en: 'chha' },
-          { char: 'ಜ', audio: 'audio/kannada/letters/ja.mp3', en: 'ja' },
-          { char: 'ಝ', audio: 'audio/kannada/letters/jha.mp3', en: 'jha' },
-          { char: 'ಟ', audio: 'audio/kannada/letters/ta.mp3', en: 'ṭa' },
-          { char: 'ಠ', audio: 'audio/kannada/letters/tha.mp3', en: 'ṭha' },
-          { char: 'ಡ', audio: 'audio/kannada/letters/da.mp3', en: 'ḍa' },
-          { char: 'ಢ', audio: 'audio/kannada/letters/dha.mp3', en: 'ḍha' },
-          { char: 'ಣ', audio: 'audio/kannada/letters/na.mp3', en: 'ṇa' },
-          { char: 'ತ', audio: 'audio/kannada/letters/ta2.mp3', en: 'ta' },
-          { char: 'ಥ', audio: 'audio/kannada/letters/tha2.mp3', en: 'tha' },
-          { char: 'ದ', audio: 'audio/kannada/letters/da2.mp3', en: 'da' },
-          { char: 'ಧ', audio: 'audio/kannada/letters/dha2.mp3', en: 'dha' },
-          { char: 'ನ', audio: 'audio/kannada/letters/na2.mp3', en: 'na' },
-          { char: 'ಪ', audio: 'audio/kannada/letters/pa.mp3', en: 'pa' },
-          { char: 'ಫ', audio: 'audio/kannada/letters/pha.mp3', en: 'pha' },
-          { char: 'ಬ', audio: 'audio/kannada/letters/ba.mp3', en: 'ba' },
-          { char: 'ಭ', audio: 'audio/kannada/letters/bha.mp3', en: 'bha' },
-          { char: 'ಮ', audio: 'audio/kannada/letters/ma.mp3', en: 'ma' },
-          { char: 'ಯ', audio: 'audio/kannada/letters/ya.mp3', en: 'ya' },
-          { char: 'ರ', audio: 'audio/kannada/letters/ra.mp3', en: 'ra' },
-          { char: 'ಲ', audio: 'audio/kannada/letters/la.mp3', en: 'la' },
-          { char: 'ವ', audio: 'audio/kannada/letters/va.mp3', en: 'va' },
-          { char: 'ಶ', audio: 'audio/kannada/letters/sha.mp3', en: 'sha' },
-          { char: 'ಷ', audio: 'audio/kannada/letters/shha.mp3', en: 'ṣa' },
-          { char: 'ಸ', audio: 'audio/kannada/letters/sa.mp3', en: 'sa' },
-          { char: 'ಹ', audio: 'audio/kannada/letters/ha.mp3', en: 'ha' }
-        ]}
-      ],
-      Telugu: [
-        { group: 'అచ్చులు (Vowels) 🟣', letters: [
-          { char: 'అ', audio: 'audio/telugu/letters/a.mp3', en: 'a' },
-          { char: 'ఆ', audio: 'audio/telugu/letters/aa.mp3', en: 'aa' },
-          { char: 'ఇ', audio: 'audio/telugu/letters/i.mp3', en: 'i' },
-          { char: 'ఈ', audio: 'audio/telugu/letters/ii.mp3', en: 'ii' },
-          { char: 'ఉ', audio: 'audio/telugu/letters/u.mp3', en: 'u' },
-          { char: 'ఊ', audio: 'audio/telugu/letters/uu.mp3', en: 'uu' },
-          { char: 'ఎ', audio: 'audio/telugu/letters/e.mp3', en: 'e' },
-          { char: 'ఏ', audio: 'audio/telugu/letters/ee.mp3', en: 'ee' },
-          { char: 'ఐ', audio: 'audio/telugu/letters/ai.mp3', en: 'ai' },
-          { char: 'ఒ', audio: 'audio/telugu/letters/o.mp3', en: 'o' },
-          { char: 'ఓ', audio: 'audio/telugu/letters/oo.mp3', en: 'oo' },
-          { char: 'ఔ', audio: 'audio/telugu/letters/au.mp3', en: 'au' }
-        ]},
-        { group: 'హల్లులు (Consonants) 🟢', letters: [
-          { char: 'క', audio: 'audio/telugu/letters/ka.mp3', en: 'ka' },
-          { char: 'ఖ', audio: 'audio/telugu/letters/kha.mp3', en: 'kha' },
-          { char: 'గ', audio: 'audio/telugu/letters/ga.mp3', en: 'ga' },
-          { char: 'ఘ', audio: 'audio/telugu/letters/gha.mp3', en: 'gha' },
-          { char: 'చ', audio: 'audio/telugu/letters/cha.mp3', en: 'cha' },
-          { char: 'ఛ', audio: 'audio/telugu/letters/chha.mp3', en: 'chha' },
-          { char: 'జ', audio: 'audio/telugu/letters/ja.mp3', en: 'ja' },
-          { char: 'ఝ', audio: 'audio/telugu/letters/jha.mp3', en: 'jha' },
-          { char: 'ట', audio: 'audio/telugu/letters/ta.mp3', en: 'ṭa' },
-          { char: 'ఠ', audio: 'audio/telugu/letters/tha.mp3', en: 'ṭha' },
-          { char: 'డ', audio: 'audio/telugu/letters/da.mp3', en: 'ḍa' },
-          { char: 'ఢ', audio: 'audio/telugu/letters/dha.mp3', en: 'ḍha' },
-          { char: 'ణ', audio: 'audio/telugu/letters/na.mp3', en: 'ṇa' },
-          { char: 'త', audio: 'audio/telugu/letters/ta2.mp3', en: 'ta' },
-          { char: 'థ', audio: 'audio/telugu/letters/tha2.mp3', en: 'tha' },
-          { char: 'ద', audio: 'audio/telugu/letters/da2.mp3', en: 'da' },
-          { char: 'ధ', audio: 'audio/telugu/letters/dha2.mp3', en: 'dha' },
-          { char: 'న', audio: 'audio/telugu/letters/na2.mp3', en: 'na' },
-          { char: 'ప', audio: 'audio/telugu/letters/pa.mp3', en: 'pa' },
-          { char: 'ఫ', audio: 'audio/telugu/letters/pha.mp3', en: 'pha' },
-          { char: 'బ', audio: 'audio/telugu/letters/ba.mp3', en: 'ba' },
-          { char: 'భ', audio: 'audio/telugu/letters/bha.mp3', en: 'bha' },
-          { char: 'మ', audio: 'audio/telugu/letters/ma.mp3', en: 'ma' },
-          { char: 'య', audio: 'audio/telugu/letters/ya.mp3', en: 'ya' },
-          { char: 'ర', audio: 'audio/telugu/letters/ra.mp3', en: 'ra' },
-          { char: 'ల', audio: 'audio/telugu/letters/la.mp3', en: 'la' },
-          { char: 'వ', audio: 'audio/telugu/letters/va.mp3', en: 'va' },
-          { char: 'శ', audio: 'audio/telugu/letters/sha.mp3', en: 'sha' },
-          { char: 'ష', audio: 'audio/telugu/letters/shha.mp3', en: 'ṣa' },
-          { char: 'స', audio: 'audio/telugu/letters/sa.mp3', en: 'sa' },
-          { char: 'హ', audio: 'audio/telugu/letters/ha.mp3', en: 'ha' }
-        ]}
-      ],
-      Tamil: [
-        { group: 'உயிரெழுத்துக்கள் (Vowels) 🟣', letters: [
-          { char: 'அ', audio: 'audio/tamil/letters/a.mp3', en: 'a' },
-          { char: 'ஆ', audio: 'audio/tamil/letters/aa.mp3', en: 'aa' },
-          { char: 'இ', audio: 'audio/tamil/letters/i.mp3', en: 'i' },
-          { char: 'ஈ', audio: 'audio/tamil/letters/ii.mp3', en: 'ii' },
-          { char: 'உ', audio: 'audio/tamil/letters/u.mp3', en: 'u' },
-          { char: 'ஊ', audio: 'audio/tamil/letters/uu.mp3', en: 'uu' },
-          { char: 'எ', audio: 'audio/tamil/letters/e.mp3', en: 'e' },
-          { char: 'ஏ', audio: 'audio/tamil/letters/ee.mp3', en: 'ee' },
-          { char: 'ஐ', audio: 'audio/tamil/letters/ai.mp3', en: 'ai' },
-          { char: 'ஒ', audio: 'audio/tamil/letters/o.mp3', en: 'o' },
-          { char: 'ஓ', audio: 'audio/tamil/letters/oo.mp3', en: 'oo' },
-          { char: 'ஔ', audio: 'audio/tamil/letters/au.mp3', en: 'au' }
-        ]},
-        { group: 'மெய்யெழுத்துக்கள் (Consonants) 🟢', letters: [
-          { char: 'க', audio: 'audio/tamil/letters/ka.mp3', en: 'ka' },
-          { char: 'ங', audio: 'audio/tamil/letters/nga.mp3', en: 'nga' },
-          { char: 'ச', audio: 'audio/tamil/letters/cha.mp3', en: 'cha' },
-          { char: 'ஞ', audio: 'audio/tamil/letters/nja.mp3', en: 'nja' },
-          { char: 'ட', audio: 'audio/tamil/letters/ta.mp3', en: 'ṭa' },
-          { char: 'ண', audio: 'audio/tamil/letters/na.mp3', en: 'ṇa' },
-          { char: 'த', audio: 'audio/tamil/letters/tha.mp3', en: 'tha' },
-          { char: 'ந', audio: 'audio/tamil/letters/na2.mp3', en: 'na' },
-          { char: 'ப', audio: 'audio/tamil/letters/pa.mp3', en: 'pa' },
-          { char: 'ம', audio: 'audio/tamil/letters/ma.mp3', en: 'ma' },
-          { char: 'ய', audio: 'audio/tamil/letters/ya.mp3', en: 'ya' },
-          { char: 'ர', audio: 'audio/tamil/letters/ra.mp3', en: 'ra' },
-          { char: 'ல', audio: 'audio/tamil/letters/la.mp3', en: 'la' },
-          { char: 'வ', audio: 'audio/tamil/letters/va.mp3', en: 'va' },
-          { char: 'ழ', audio: 'audio/tamil/letters/zh.mp3', en: 'zha' },
-          { char: 'ள', audio: 'audio/tamil/letters/la2.mp3', en: 'ḷa' },
-          { char: 'ற', audio: 'audio/tamil/letters/ra2.mp3', en: 'ṟa' },
-          { char: 'ன', audio: 'audio/tamil/letters/na3.mp3', en: 'ṉa' },
-          { char: 'ஷ', audio: 'audio/tamil/letters/shha.mp3', en: 'ṣa' },
-          { char: 'ஸ', audio: 'audio/tamil/letters/sa.mp3', en: 'sa' },
-          { char: 'ஹ', audio: 'audio/tamil/letters/ha.mp3', en: 'ha' },
-          { char: 'ஜ', audio: 'audio/tamil/letters/ja.mp3', en: 'ja' }
-        ]}
-      ],
-      Malayalam: [
-        { group: 'സ്വരങ്ങൾ (Vowels) 🟣', letters: [
-          { char: 'അ', audio: 'audio/malayalam/letters/a.mp3', en: 'a' },
-          { char: 'ആ', audio: 'audio/malayalam/letters/aa.mp3', en: 'aa' },
-          { char: 'ഇ', audio: 'audio/malayalam/letters/i.mp3', en: 'i' },
-          { char: 'ഈ', audio: 'audio/malayalam/letters/ii.mp3', en: 'ii' },
-          { char: 'ഉ', audio: 'audio/malayalam/letters/u.mp3', en: 'u' },
-          { char: 'ഊ', audio: 'audio/malayalam/letters/uu.mp3', en: 'uu' },
-          { char: 'എ', audio: 'audio/malayalam/letters/e.mp3', en: 'e' },
-          { char: 'ഏ', audio: 'audio/malayalam/letters/ee.mp3', en: 'ee' },
-          { char: 'ഐ', audio: 'audio/malayalam/letters/ai.mp3', en: 'ai' },
-          { char: 'ഒ', audio: 'audio/malayalam/letters/o.mp3', en: 'o' },
-          { char: 'ഓ', audio: 'audio/malayalam/letters/oo.mp3', en: 'oo' },
-          { char: 'ഔ', audio: 'audio/malayalam/letters/au.mp3', en: 'au' }
-        ]},
-        { group: 'വ്യഞ്ജനങ്ങൾ (Consonants) 🟢', letters: [
-          { char: 'ക', audio: 'audio/malayalam/letters/ka.mp3', en: 'ka' },
-          { char: 'ഖ', audio: 'audio/malayalam/letters/kha.mp3', en: 'kha' },
-          { char: 'ഗ', audio: 'audio/malayalam/letters/ga.mp3', en: 'ga' },
-          { char: 'ഘ', audio: 'audio/malayalam/letters/gha.mp3', en: 'gha' },
-          { char: 'ങ', audio: 'audio/malayalam/letters/nga.mp3', en: 'nga' },
-          { char: 'ച', audio: 'audio/malayalam/letters/cha.mp3', en: 'cha' },
-          { char: 'ഛ', audio: 'audio/malayalam/letters/chha.mp3', en: 'chha' },
-          { char: 'ജ', audio: 'audio/malayalam/letters/ja.mp3', en: 'ja' },
-          { char: 'ഝ', audio: 'audio/malayalam/letters/jha.mp3', en: 'jha' },
-          { char: 'ട', audio: 'audio/malayalam/letters/ta.mp3', en: 'ṭa' },
-          { char: 'ഠ', audio: 'audio/malayalam/letters/tha.mp3', en: 'ṭha' },
-          { char: 'ഡ', audio: 'audio/malayalam/letters/da.mp3', en: 'ḍa' },
-          { char: 'ഢ', audio: 'audio/malayalam/letters/dha.mp3', en: 'ḍha' },
-          { char: 'ണ', audio: 'audio/malayalam/letters/na.mp3', en: 'ṇa' },
-          { char: 'ത', audio: 'audio/malayalam/letters/ta2.mp3', en: 'ta' },
-          { char: 'ഥ', audio: 'audio/malayalam/letters/tha2.mp3', en: 'tha' },
-          { char: 'ദ', audio: 'audio/malayalam/letters/da2.mp3', en: 'da' },
-          { char: 'ധ', audio: 'audio/malayalam/letters/dha2.mp3', en: 'dha' },
-          { char: 'ന', audio: 'audio/malayalam/letters/na2.mp3', en: 'na' },
-          { char: 'പ', audio: 'audio/malayalam/letters/pa.mp3', en: 'pa' },
-          { char: 'ഫ', audio: 'audio/malayalam/letters/pha.mp3', en: 'pha' },
-          { char: 'ബ', audio: 'audio/malayalam/letters/ba.mp3', en: 'ba' },
-          { char: 'ഭ', audio: 'audio/malayalam/letters/bha.mp3', en: 'bha' },
-          { char: 'മ', audio: 'audio/malayalam/letters/ma.mp3', en: 'ma' },
-          { char: 'യ', audio: 'audio/malayalam/letters/ya.mp3', en: 'ya' },
-          { char: 'ര', audio: 'audio/malayalam/letters/ra.mp3', en: 'ra' },
-          { char: 'ല', audio: 'audio/malayalam/letters/la.mp3', en: 'la' },
-          { char: 'വ', audio: 'audio/malayalam/letters/va.mp3', en: 'va' },
-          { char: 'ശ', audio: 'audio/malayalam/letters/sha.mp3', en: 'sha' },
-          { char: 'ഷ', audio: 'audio/malayalam/letters/shha.mp3', en: 'ṣa' },
-          { char: 'സ', audio: 'audio/malayalam/letters/sa.mp3', en: 'sa' },
-          { char: 'ഹ', audio: 'audio/malayalam/letters/ha.mp3', en: 'ha' }
-        ]}
-      ]
-    };
-
-    // You can use localStorage.getItem("selectedLanguage") to get the current language
-    // Emoji for each language
-    const langEmojis = {
-      Hindi: '🇮🇳',
-      Kannada: '🇮🇳',
-      Telugu: '🇮🇳',
-      Tamil: '🇮🇳',
-      Malayalam: '🇮🇳'
-    };
-    function showLettersModal() {
-      const lang = localStorage.getItem("selectedLanguage") || "Hindi";
-      document.getElementById("lettersLang").innerText = lang;
-      document.getElementById("lettersEmoji").innerText =
-        lang === 'Hindi' ? '🪔' :
-        lang === 'Kannada' ? '🌺' :
-        lang === 'Telugu' ? '🌸' :
-        lang === 'Tamil' ? '🌼' :
-        lang === 'Malayalam' ? '🌴' : '🔤';
-      const grid = document.getElementById("lettersGrid");
-      grid.innerHTML = "";
-      (lettersData[lang] || []).forEach(group => {
-        // Group label
-        const groupLabel = document.createElement('div');
-        groupLabel.className = "col-span-7 text-lg font-semibold text-pink-600 mt-2 mb-1 flex items-center gap-2";
-        groupLabel.innerHTML = `<span>${group.group}</span>`;
-        grid.appendChild(groupLabel);
-        // Letters
-        group.letters.forEach(l => {
-          const letterWrap = document.createElement('div');
-          letterWrap.className = 'flex flex-col items-center';
-          // Letter button
-          const btn = document.createElement("button");
-          btn.className = "text-3xl font-bold bg-blue-100 hover:bg-yellow-300 text-blue-800 rounded-lg shadow p-4 transition duration-200 focus:outline-none letter-emoji-btn";
-          btn.innerText = l.char;
-          btn.onmouseenter = () => playLetterAudio(l.audio);
-          btn.onfocus = () => playLetterAudio(l.audio);
-          btn.onclick = () => playLetterAudio(l.audio);
-          letterWrap.appendChild(btn);
-          // English translation
-          if (l.en) {
-            const en = document.createElement('span');
-            en.className = 'text-xs text-gray-500 mt-1 font-semibold';
-            en.innerText = l.en;
-            letterWrap.appendChild(en);
-          }
-          grid.appendChild(letterWrap);
-        });
-      });
-      document.getElementById("lettersModal").classList.remove("hidden");
-    }
-    function hideLettersModal() {
-      document.getElementById("lettersModal").classList.add("hidden");
-    }
-    function playLetterAudio(audioSrc) {
-      const audio = document.getElementById("letterAudio");
-      audio.src = audioSrc;
-      audio.play();
-    }
     function startQuiz() {
       window.location.href = "quiz.html";
-    }
-    function goBackToWelcome() {
-      // Optionally clear selected language
-      localStorage.removeItem("selectedLanguage");
-      window.location.href = "welcome.html";
     }
     function genieTalk() {
       document.getElementById("genieAudio").play();
